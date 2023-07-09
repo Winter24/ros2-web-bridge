@@ -7,7 +7,7 @@ var MAP_HEIGHT = window.innerHeight - (window.innerHeight)*0.08;
 $(document).ready(function() {
     $body = $("body");
     var ros = new ROSLIB.Ros({
-        url: 'ws://localhost:9090'
+        url: 'ws://192.168.1.166:9090'
     });
 
     // Create the main viewer.
@@ -23,7 +23,7 @@ $(document).ready(function() {
         ros: ros,
         rootObject: viewer.scene,
         viewer: viewer,
-        serverName: '/nav2_bt_navigator/transition_event',
+        serverName: '/move_base',//
         continuous: true
     });
 
@@ -142,8 +142,8 @@ $(document).ready(function() {
         });
 
         manager.on('move', function(event, nipple) {
-            max_linear = 0.2; // m/s
-            max_angular = 0.8; // rad/s
+            max_linear = 0.5; // m/s
+            max_angular = 0.5; // rad/s
             max_distance = 75.0; // pixels;
             linear_speed = Math.sin(nipple.angle.radian) * max_linear * nipple.distance / max_distance;
             angular_speed = -Math.cos(nipple.angle.radian) * max_angular * nipple.distance / max_distance;

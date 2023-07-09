@@ -13,7 +13,7 @@ $(document).ready(function() {
                 function connect() {
 
                     var ros = new ROSLIB.Ros({
-                        url: 'ws://localhost:9090'
+                        url: 'ws://192.168.1.166:9090'
                     });
 
 
@@ -102,7 +102,7 @@ $(document).ready(function() {
                             function connect() {
 
                                 var ros = new ROSLIB.Ros({
-                                    url: 'ws://localhost:9090'
+                                    url: 'ws://192.168.1.166:9090'
                                 });
 
 

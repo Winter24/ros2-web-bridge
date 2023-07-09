@@ -41,8 +41,6 @@ class roslaunch_process():
         self.process_mapping = subprocess.Popen(
             ["rviz2"])
 
-        time.sleep(5)
-
         self.process_mapping = subprocess.Popen(
             ["ros2", "launch", "gcamp_gazebo", "online_async_launch.py"])
 
@@ -203,7 +201,7 @@ def killnode():
 def savemap():
     mapname = request.get_data().decode('utf-8')
 
-    os.system("rosrun map_server map_saver -f"+" " +
+    os.system("ros2 run nav2_map_server map_saver_cli -f"+" " +
               os.path.join(os.getcwd(), "static", mapname))
     os.system("convert"+" "+os.getcwd()+"/static/"+mapname +
               ".pgm"+" "+os.getcwd()+"/static/"+mapname+".png")
