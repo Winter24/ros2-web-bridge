@@ -2,23 +2,13 @@
 {% block content %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/nipple.min.js')}}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/mapping.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/roslib.js')}}"></script>
     <nav class="navbar navbar-expand-lg bg-light navbar-light static-top">
     <div class="container-fluid">
         <!-- Brand -->
         <a class="navbar-brand " href="#"><img src="{{url_for('static', filename='img/mainLogo.svg')}}" width="220" height="100" alt=""></a>
         <!-- Links -->
         <ul class="navbar-nav ml-auto">
-            
-            <li class="nav-item" id="restart">
-                <a class="nav-link" href="#">
-                    <i class="fa fa-repeat center"></i>
-                </a>
-            </li>
-            <li class="nav-item" id="shutdown">
-                <a class="nav-link" href="#">
-                    <i class="fa fa-power-off center"></i>
-                </a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">
                     <i class="fa fa-battery-full center"></i>
@@ -60,8 +50,7 @@
                     </a></li>
                 <li><a href="">
                        <button type="button" class="btn btn-primary mapping-button" data-toggle="modal" data-target="#exampleModal" id="start-nav-button"  >Start Navigation</button>
-            
-                        
+
                     </a></li>
             </ul>
         </div>
@@ -91,6 +80,7 @@
         </div>
     </div>
 <div class="modal-load">
+
    
 </div>
     

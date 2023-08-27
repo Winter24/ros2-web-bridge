@@ -15,8 +15,8 @@ NAV2D.ImageMapClientNav = function(options) {
     this.ros = options.ros;
     var topic = options.topic || '/map_metadata';
     var image = options.image;
-    this.serverName = options.serverName || '/move_base';
-    this.actionName = options.actionName || 'move_base_msgs/MoveBaseAction';
+    this.serverName = options.serverName || '/bt_navigator';
+    this.actionName = options.actionName || '/navigate_to_pose/_action';
     this.rootObject = options.rootObject || new createjs.Container();
     this.viewer = options.viewer;
     this.withOrientation = options.withOrientation || true;
@@ -60,8 +60,8 @@ NAV2D.Navigator = function(options) {
     var that = this;
     options = options || {};
     var ros = options.ros;
-    var serverName = options.serverName || '/move_base';
-    var actionName = options.actionName || 'move_base_msgs/MoveBaseAction';
+    var serverName = options.serverName || '/bt_navigator';  
+    var actionName = options.actionName || '/navigate_to_pose/_action';
     var withOrientation = options.withOrientation || true;
     this.rootObject = options.rootObject || new createjs.Container();
 
@@ -76,7 +76,7 @@ NAV2D.Navigator = function(options) {
         var robot = new ROSLIB.Topic({
             ros: ros,
             name: '/initialpose',
-            messageType: 'geometry_msgs/PoseWithCovarianceStamped'
+            messageType: 'geometry_msgs/msg/PoseWithCovarianceStamped'
         });
 
         var posee = new ROSLIB.Message({ header: { frame_id: "map" }, pose: { pose: { position: { x: pose.position.x, y: pose.position.y, z: 0.0 }, orientation: { z: pose.orientation.z, w: pose.orientation.w } }, covariance: [0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891945200942] } });
@@ -150,6 +150,8 @@ NAV2D.Navigator = function(options) {
     pulse : true
   });
 
+
+
     // wait for a pose to come in first
     robotMarker.visible = false;
 
@@ -167,7 +169,7 @@ NAV2D.Navigator = function(options) {
     var poseListener = new ROSLIB.Topic({
         ros: ros,
         name: '/robot_pose',
-        messageType: 'geometry_msgs/Pose',
+        messageType: 'geometry_msgs/msg/Pose',
         throttle_rate: 1
     });
 
@@ -203,8 +205,8 @@ NAV2D.Navigator = function(options) {
 
         pathTopic = new ROSLIB.Topic({
             ros: ros,
-            name: '/move_base/NavfnROS/plan',
-            messageType: 'nav_msgs/Path'
+            name: '/plan',
+            messageType: 'nav_msgs/msg/Path'
         });
 
         pathTopic.subscribe(function(message) {
@@ -332,7 +334,19 @@ NAV2D.Navigator = function(options) {
                 }
 
                 navigation = false;
+                console.log(positionVec3, orientation);
+                document.getElementById('button_go').addEventListener('click', function (e) {
+                    
+                    $.ajax({
+                      type: 'GET',
+                      url: '/getpose/' + positionVec3.x + ',' + positionVec3.y + ',' + positionVec3.z + ',' + orientation.x + ',' + orientation.y + ',' + orientation.z + ',' + orientation.w,
 
+                      success: function () {
+                        console.log('send goal');
+                      }
+                  
+                    })
+                  });
             }
         }
 
@@ -374,8 +388,50 @@ NAV2D.Navigator = function(options) {
     this.rootObject.addEventListener('stagemouseup', function(event) {
         pannavfunction(event, 'up');
     });
-};
+    };
 
+    // window.onload = function() {
+    //     var imgX;
+    //     var imgY;
+        
+    //     var canvas = document.getElementById("canvas"),
+    //     ctx = canvas.getContext("2d");
+    //     canvas.width = 1000;
+    //     canvas.height = 1000;
+
+    //     function getMousePosition(canvas, event) {
+    //         let rect = canvas.getBoundingClientRect();
+    //         imgX = event.clientX - rect.left;
+    //         imgY = event.clientY - rect.top;
+        
+    //         console.log(imgX, imgY);
+            
+        
+    //         var icon = new Image();
+    //         icon.src = "/static/pin1.png";
+    //         // ctx.drawImage(background, 0, 0);
+    //         ctx.drawImage(icon, imgX - 12, imgY - 24);
+    //       }
+      
+    //       let canvasElem = document.querySelector("canvas");
+    //       canvasElem.addEventListener("mousedown", function (e) {
+    //         getMousePosition(canvasElem, e);
+    //       });
+      
+    //       document.getElementById('button_go').addEventListener('click', function (e) {
+            
+    //         $.ajax({
+    //           type: 'GET',
+    //           url: '/getpose/' + imgX + ',' + imgY,
+            
+    //           success: function () {
+    //             console.log('send goal');
+    //           }
+          
+    //         })
+    //       });
+    //     };
+    
 
 
 NAV2D.OccupancyGridClientNav = function(options) {
@@ -384,8 +440,8 @@ NAV2D.OccupancyGridClientNav = function(options) {
     this.ros = options.ros;
     var topic = options.topic || '/map';
     var continuous = options.continuous;
-    this.serverName = options.serverName || '/move_base';
-    this.actionName = options.actionName || 'move_base_msgs/MoveBaseAction';
+    this.serverName = options.serverName || '/bt_navigator';
+    this.actionName = options.actionName || '/navigate_to_pose/_action';
     this.rootObject = options.rootObject || new createjs.Container();
     this.viewer = options.viewer;
     this.withOrientation = options.withOrientation || true;

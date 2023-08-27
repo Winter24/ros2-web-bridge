@@ -13,7 +13,7 @@ $(document).ready(function() {
                 function connect() {
 
                     var ros = new ROSLIB.Ros({
-                        url: 'ws://192.168.1.166:9090'
+                        url: 'ws://192.168.65.123:9090'
                     });
 
 
@@ -75,18 +75,14 @@ $(document).ready(function() {
         document.cookie = event.target.innerHTML;
         $('#exampleModal').modal('hide');
 
-
         $.ajax({
-
             url: '/index/navigation-precheck',
             type: 'GET',
             success: function(response) {
 
-
                 if (response.mapcount > 0) {
 
                     $body.addClass("loading");
-
                     $.ajax({
 
                         url: '/index/gotonavigation',
@@ -97,33 +93,30 @@ $(document).ready(function() {
 
                         success: function(response) {
 
-
-
                             function connect() {
 
                                 var ros = new ROSLIB.Ros({
-                                    url: 'ws://192.168.1.166:9090'
+                                    url: 'ws://192.168.65.123:9090'
                                 });
 
 
-
-                                ros.on('connection', function() {
+                                ros.on('connection', function() {                       
                                     console.log('Connected to websocket server.');
                                     var rosTopic = new ROSLIB.Topic({
                                         ros: ros,
-                                        name: '/rosout_agg',
+                                        name: '/rosout',
                                         messageType: 'rcl_interfaces/msg/Log'
                                     });
 
 
                                     rosTopic.subscribe(function(message) {
 
-                                        if (message.msg == "odom received!") {
-                                            console.log(message.msg)
+                                        // if (message.msg == "odom received!") {
+                                            console.log(message.msg);
                                             window.location = "/navigation";
                                             $body.removeClass("loading");
                                             rosTopic.unsubscribe();
-                                        }
+                                        // }
 
                                     });
 

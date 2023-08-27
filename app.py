@@ -1,4 +1,6 @@
-from flask import Flask, render_template, url_for, g, jsonify, request
+from flask import url_for, g, jsonify
+from flask import render_template
+from flask import request 
 from sqlite3 import Error
 import subprocess
 import signal
@@ -6,10 +8,14 @@ import os
 import time
 import sqlite3
 
+import paho.mqtt.publish as publish
+import paho.mqtt.client as mqtt
 
-
+from flask import Flask
 app = Flask(__name__)
 
+data = ''
+plan = ''
 
 DATABASE = os.path.join(os.getcwd(), "static", "database.db")
 
@@ -24,32 +30,52 @@ def get_db():
 class roslaunch_process():
     @classmethod
     def start_navigation(self, mapname):
+        
+        # self.process_navigation = subprocess.Popen(
+        #     ["ros2", "launch", "robot_pose_publisher_ros2", "robot_pose_publisher_launch.py"])
+        
+        # self.process_navigation = subprocess.Popen(
+        #     ["ros2", "launch", "gcamp_gazebo", "launch_sim.launch.py"])
+        
+        # self.process_navigation = subprocess.Popen(
+        #     ["rviz2"])
 
         self.process_navigation = subprocess.Popen(
-            ["ros2", "launch", "gcamp_gazebo", "navigation_launch.py", "map_file:="+os.getcwd()+"/static/"+mapname+".yaml"])
+            ["ros2", "launch", "gcamp_gazebo", "navigation_launch.py", "use_sim_time:=false"])
+        
+        time.sleep(5)
+
+        self.process_navigation = subprocess.Popen(
+            ["ros2", "launch", "gcamp_gazebo", "localization_launch.py", "map:=./static/"+ mapname +".yaml", "use_sim_time:=false"])  
 
     @classmethod
     def stop_navigation(self):
-        self.process_navigation.send_signal(signal.SIGINT)
+        # self.process_navigation.send_signal(signal.SIGINT)
+        self.process_navigation.kill()
 
     @classmethod
     def start_mapping(self):
 
-        self.process_mapping = subprocess.Popen(
-            ["ros2", "launch", "gcamp_gazebo", "launch_sim.launch.py"])
+        # self.process_mapping = subprocess.Popen(
+        #     ["ros2", "launch", "robot_pose_publisher_ros2", "robot_pose_publisher_launch.py"])    
+
+        # self.process_mapping = subprocess.Popen(
+        #     ["ros2", "launch", "gcamp_gazebo", "launch_sim.launch.py"])
+
+        # self.process_mapping = subprocess.Popen(
+        #     ["rviz2"])
 
         self.process_mapping = subprocess.Popen(
-            ["rviz2"])
+            ["ros2", "launch", "gcamp_gazebo", "online_async_launch.py", "use_sim_time:=false"])
 
-        self.process_mapping = subprocess.Popen(
-            ["ros2", "launch", "gcamp_gazebo", "online_async_launch.py"])
-
+        # self.process_mapping = subprocess.Popen(
+        #     ["ros2", "launch", "gcamp_gazebo", "online_async_launch.py"])
         
         
     @classmethod
     def stop_mapping(self):
-
-        self.process_mapping.send_signal(signal.SIGINT)
+        # self.process_mapping.send_signal(signal.SIGINT)
+        self.process_mapping.kill()
 
 
 @app.teardown_appcontext
@@ -59,20 +85,85 @@ def close_connection(exception):
         db.close()
 
 
-@app.before_first_request
-def create_table():
+# @app.before_first_request
+# def create_table():
 
-    subprocess.Popen(["ros2", "launch", "gcamp_gazebo",
-                      "navigation_launch.py"])
+#     subprocess.Popen(["ros2", "launch", "gcamp_gazebo",
+#                       "navigation_launch.py"])
 
-    with app.app_context():
-        try:
-            c = get_db().cursor()
-            c.execute(
-                "CREATE TABLE IF NOT EXISTS maps (id integer PRIMARY KEY,name text NOT NULL)")
-            c.close()
-        except Error as e:
-            print(e)
+#     with app.app_context():
+#         try:
+#             c = get_db().cursor()
+#             c.execute(
+#                 "CREATE TABLE IF NOT EXISTS maps (id integer PRIMARY KEY,name text NOT NULL)")
+#             c.close()
+#         except Error as e:
+#             print(e)
+
+## get function to get sensor readings :
+@app.route('/getReadings', methods=['GET'])
+def update():
+    global data
+    data = "sensors = 1,2,3,4,5,6,7,8,9,10"
+    return data
+    
+    
+  
+## Get Request to get plan:
+#convert ros coordinates to web coordinates to visualize plan on the ui
+outMinX = 0
+outMaxX = 945
+outMinY = 0
+outMaxY = 681
+inMinX = -8.36
+inMaxX = 18
+inMinY = 8.18
+inMaxY = -11.1
+@app.route('/getPlan', methods=['GET'])
+def updateplan():
+    global plan
+    if (plan == ''):
+        return ''
+    print('return')
+    out = ''
+    temp = plan.split('_')
+    for point in temp:
+        pt = point.split(',')
+        if (len(pt) == 2):
+            x = (pt [0])
+            y = (pt [1])
+       
+               
+## Equation
+           
+            outx = ((float(x)- inMinX) / (inMaxX - inMinX)) * (outMaxX - outMinX) + outMinX
+            outy = ((float(y) - inMinY) / (inMaxY - inMinY)) * (outMaxY - outMinY) + outMinY
+            out += str(outx)+','+str(outy)+'_'
+    return out[0:-1]
+    
+
+##Get goal position 
+@app.route('/getpose/<val>')
+def updatepose(val):
+    
+    
+    print(val.split(','))
+    publish.single('cic_pose', val, hostname='broker.hivemq.com')
+    return 'ok'
+    
+
+## MQTT:
+##decoding messages from string to the type what we need (int ,float,..) then print in terminal
+def onFB(_, __, msg):
+    global data
+    data = msg.payload.decode('utf-8')
+    print(data)
+    
+def onPlan(_, __, msg):
+    global plan
+    plan = msg.payload.decode('utf-8')
+    print(plan)
+
 
 
 @app.route('/')
@@ -114,7 +205,7 @@ def themainroute(variable):
         mapname = request.get_data().decode('utf-8')
 
         roslaunch_process.start_navigation(mapname)
-
+        
         return "success"
 
 
@@ -173,7 +264,7 @@ def navigation_properties():
 
 @app.route("/navigation/stop", methods=['POST'])
 def stop():
-    os.system("rostopic pub /move_base/cancel actionlib_msgs/GoalID -- {}")
+    # os.system("rostopic pub /move_base/cancel actionlib_msgs/GoalID -- {}")
     return("stopped the robot")
 
 
@@ -201,10 +292,11 @@ def killnode():
 def savemap():
     mapname = request.get_data().decode('utf-8')
 
-    os.system("ros2 run nav2_map_server map_saver_cli -f"+" " +
-              os.path.join(os.getcwd(), "static", mapname))
-    os.system("convert"+" "+os.getcwd()+"/static/"+mapname +
-              ".pgm"+" "+os.getcwd()+"/static/"+mapname+".png")
+    os.system("ros2 run nav2_map_server map_saver_cli -f" + " " +
+              os.path.join(os.getcwd(), "static", mapname) + " " + 
+              "--ros-args -p save_map_timeout:=10000" )
+    os.system("convert ./static/"+ mapname + ".pgm" +
+              " ./static/" + mapname + ".png")
 
     with get_db():
         try:

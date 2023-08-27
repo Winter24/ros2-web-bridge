@@ -4,9 +4,30 @@
 <div class="bg-image"></div>
 <div class="bg-text">
     <h2>Choose mode</h2>
-    <button class="button-index glow-button" data-toggle="modal" data-target="#exampleModal">Navigation</button>
+    <img src="{{ url_for('static', filename='css/image.png')}}"  style="width:400px;">
 
-    <button id="index-map" class="button-index glow-button" style="margin-left: 10%;">Mapping</button>
+    <h1>SAGA</h1>
+    <div class="button-container" style="display: flex; align-items: center; ">
+        <button class="button-index glow-button" data-toggle="modal" data-target="#exampleModal">Navigation</button>
+
+        <button id="index-map" class="button-index glow-button" >Mapping</button>
+    </div>
+
+    <style>
+ .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
+    }   
+    
+    .button-index {
+        margin: 5px;
+        width: 100%;
+    }
+    </style>
+   
+    
 
 </div>
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
