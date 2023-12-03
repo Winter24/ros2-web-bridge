@@ -61,6 +61,7 @@ $(document).ready(function() {
 
                 //  setTimeout(function(){ window.location ="mapping";
                 // $body.removeClass("loading"); }, 10000);
+                //add comment
 
             },
             error: function(error) {
