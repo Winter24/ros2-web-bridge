@@ -59,17 +59,17 @@ class roslaunch_process():
         # self.process_mapping = subprocess.Popen(
         #     ["ros2", "launch", "robot_pose_publisher_ros2", "robot_pose_publisher_launch.py"])    
 
-        # self.process_mapping = subprocess.Popen(
-        #     ["ros2", "launch", "gcamp_gazebo", "launch_sim.launch.py"])
-
-        # self.process_mapping = subprocess.Popen(
-        #     ["rviz2"])
+        self.process_mapping = subprocess.Popen(
+            ["ros2", "launch", "gcamp_gazebo", "launch_sim.launch.py"])
 
         self.process_mapping = subprocess.Popen(
-            ["ros2", "launch", "gcamp_gazebo", "online_async_launch.py", "use_sim_time:=false"])
+            ["rviz2"])
 
         # self.process_mapping = subprocess.Popen(
-        #     ["ros2", "launch", "gcamp_gazebo", "online_async_launch.py"])
+        #     ["ros2", "launch", "gcamp_gazebo", "online_async_launch.py", "use_sim_time:=false"])
+
+        self.process_mapping = subprocess.Popen(
+            ["ros2", "launch", "gcamp_gazebo", "online_async_launch.py"])
         
         
     @classmethod

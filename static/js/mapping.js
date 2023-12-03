@@ -7,7 +7,7 @@ var MAP_HEIGHT = window.innerHeight - (window.innerHeight)*0.08;
 $(document).ready(function() {
     $body = $("body");
     var ros = new ROSLIB.Ros({
-        url: 'ws://192.168.65.123:9090'
+        url: 'ws://localhost:9090/'
     });
 
     // Create the main viewer.

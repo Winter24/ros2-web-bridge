@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     $body = $("body");
 
     $("#index-map").click(function(event) {
@@ -13,7 +12,7 @@ $(document).ready(function() {
                 function connect() {
 
                     var ros = new ROSLIB.Ros({
-                        url: 'ws://192.168.65.123:9090'
+                        url: 'ws://localhost:9090/'
                     });
 
 
@@ -96,7 +95,7 @@ $(document).ready(function() {
                             function connect() {
 
                                 var ros = new ROSLIB.Ros({
-                                    url: 'ws://192.168.65.123:9090'
+                                    url: 'ws://localhost:9090/'
                                 });
 
 
