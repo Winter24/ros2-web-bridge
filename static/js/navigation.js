@@ -1,11 +1,10 @@
 var navigation = false;
 var pathed = false;
 var homing = false;
+// var navi = false;
 var MAP_WIDTH = (window.innerWidth)*0.65;
 var MAP_HEIGHT = window.innerHeight - (window.innerHeight)*0.08;
 var value =    document.cookie;
-
-
 
 $("#drop-text").change(function() {
     alert($("#drop-text :selected").text())
@@ -36,20 +35,20 @@ $(document).ready(function() {
         loading();
 
     });
-
+    
     function loading() {
         var rosTopic = new ROSLIB.Topic({
             ros: ros,
-            name: '/rosout_agg',
-            messageType: 'rosgraph_msgs/Log'
+            name: '/rosout',
+            messageType: 'rcl_interfaces/msg/Log'
         });
 
         rosTopic.subscribe(function(message) {
 
-            if (message.msg == "odom received!") {
-                console.log(message.msg)
+            // if (message.msg == "odom received!") {
+                console.log(message.msg);
                 $body.removeClass("loading");
-            }
+            // }
 
         });
     }
@@ -60,7 +59,7 @@ $(document).ready(function() {
             ros: ros,
             viewer: viewer,
             rootObject: viewer.scene,
-            serverName: '/move_base',
+            serverName: '/bt_navigator',
             image: `/static/${value}.png`
         });
     }
@@ -68,7 +67,7 @@ $(document).ready(function() {
 
 
     var ros = new ROSLIB.Ros({
-        url: 'ws://localhost:9090'
+        url: 'ws://192.168.65.123:9090'
     });
 
 
@@ -85,7 +84,7 @@ $(document).ready(function() {
         ros: ros,
         viewer: viewer,
         rootObject: viewer.scene,
-        serverName: '/move_base',
+        serverName: '/bt_navigator',
         image: `/static/${value}.png`
     });
 
@@ -96,7 +95,7 @@ $(document).ready(function() {
         ros: ros,
         rootObject: viewer.scene,
         viewer: viewer,
-        serverName: '/move_base',
+        serverName: '/bt_navigator',
         continuous: true
     });
 
@@ -165,6 +164,8 @@ $(document).ready(function() {
             upathed();
         }
     });
+
+    
     $("#zoomplus").click(function(event) {
         event.preventDefault();
         zoomInMap(ros, viewer);
@@ -252,10 +253,10 @@ $(document).ready(function() {
             type: 'POST',
             success: function(response) {
 
-                setTimeout(function() {
+                // setTimeout(function() {
                     window.location = "/mapping";
                     $body.removeClass("loading");
-                }, 5000);
+                // }, 5000);
 
             },
             error: function(error) {

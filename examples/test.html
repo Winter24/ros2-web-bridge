@@ -12,64 +12,17 @@
     integrity="sha512-H56QX+J/AJYBRERMrlj37tVOJUmTY3KbBut+hWULZFmCO8KAkYhXU0ssLOLeU37e8TYCTDHeOl8PhkS7lfNO/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src=" https://cdn.jsdelivr.net/npm/base64-js@1.5.1/base64js.min.js "></script>
-
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-	 crossorigin="anonymous">
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/roslibjs/1.1.0/roslib.min.js">
-
-	</script>
-	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
-    <link rel="shortcut icon" href="#">
-
-    <style type="text/css">
-		.btn-circle.btn-xl {
-			width: 100px;
-			height: 100px;
-			padding: 13px 18px;
-			border-radius: 60px;
-			font-size: 15px;
-			text-align: center;
-		}
-	</style>
-
 </head>
 
 <body>
-  <h1>FPT Lab2 robot website interface</h1>
+  <h1>Skidbot cmd_vel</h1>
   <div id="message"></div>
   <canvas id="canvas_image"></canvas>
-  <div id="image" src=""></div>
-  
-  <hr>
+  <div id="image" src="">  </div>
 
-  <div class="row">
-      <div class="col-md-12 text-center">
-          <h5>Commands</h5>
-      </div>
-      <!-- 1st row -->
-      <div class="col-md-12 text-center">
-          <button @click="forward" :disabled="loading || !connected" class="btn btn-primary">Go forward</button>
-          <br><br>
-      </div>
-      <!-- 2nd row -->
-      <div class="col-md-4 text-center">
-          <button @click="turnLeft" :disabled="loading || !connected" class="btn btn-primary">Turn left</button>
-      </div>
-      <div class="col-md-4 text-center">
-          <button @click="stop" :disabled="loading || !connected" class="btn btn-danger">Stop</button>
-          <br><br>
-      </div>
-      <div class="col-md-4 text-center">
-          <button @click="turnRight" :disabled="loading || !connected" class="btn btn-primary">Turn right</button>
-      </div>
-      <!-- 3rd row -->
-      <div class="col-md-12 text-center">
-          <button @click="backward" :disabled="loading || !connected" class="btn btn-primary">Go backward</button>
-      </div>
-  </div>
 
     <script>
+
 
       const socket = io();
 
@@ -82,9 +35,6 @@
         }
       });
 
-
-
-          
 
       socket.on('image', (message) => {
         console.log(message)
@@ -114,6 +64,7 @@
       });
 
     </script>
+
 </body>
 
 </html>

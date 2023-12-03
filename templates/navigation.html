@@ -1,11 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/navigation.js')}}"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <nav class="navbar navbar-expand-lg bg-light navbar-light static-top">
     <div class="container-fluid">
         <!-- Brand -->
-        <a class="navbar-brand " href="#"><img src="{{url_for('static', filename='img/mainLogo.svg')}}" width="60" height="50" alt=""></a>
+        <a class="navbar-brand " href="#"><img src="{{url_for('static', filename='img/mainLogo.svg')}}"  width="220" height="100" alt="" alt=""></a>
         <!-- Links -->
         <ul class="navbar-nav ml-auto">
             <!-- Dropdown -->
@@ -17,16 +19,16 @@
                     {% endfor %}
                 </div>
             </li>
-            <li class="nav-item" id="restart">
+            <!-- <li class="nav-item" id="restart">
                 <a class="nav-link" href="#">
                     <i class="fa fa-repeat center"></i>
                 </a>
-            </li>
-            <li class="nav-item" id="shutdown">
+            </li> -->
+            <!-- <li class="nav-item" id="shutdown">
                 <a class="nav-link" href="#">
                     <i class="fa fa-power-off center"></i>
                 </a>
-            </li>
+            </li> -->
             <li class="nav-item">
                 <a class="nav-link" href="#">
                     <i class="fa fa-battery-full center"></i>
@@ -51,21 +53,20 @@
             </li>
             <li>
                 <a href="#">
-                    <div class="localizee" id="home"><i class="fa fa-map-marker fa-3x"></i><span class="caption">Initialize</span></div>
+                    <div class="localizee" id="home"><i class="fa-solid fa-map-location-dot fa-3x" style="color: #f57900;"></i><span class="caption">Initialize</span></div>
                 </a>
             </li>
             <li>
                 <a href="#">
-                    <div class="stop-tool" id="stop"><i class="fa fa-hand-paper-o fa-3x"></i><span class="caption">Stop</span></div>
+                    <div class="ctrl-wrap" id="navigate"><i class="fa-solid fa-route fa-3x" style="color: #f57900;"></i><span class="caption">Navigate</span></div>
                 </a>
             </li>
-            <li>
-                <a href="#">
-                    <div class="ctrl-wrap" id="navigate"><i class="fa fa-paper-plane fa-5x"></i><span class="caption">Navigate</span></div>
-                </a>
-            </li>
+            <a>
+        <img id='button_go' style="height: 100px; cursor:pointer; bottom: 25px;" src="/static/Go.png">
+        <br>
         </ul>
     </div>
+    
 </div>
 <!-- nav box -->
 <nav class="side-pane">
@@ -77,7 +78,7 @@
         </div>
         <div class="settings-wrap"> Settings
             <ul>
-                <li><a href="#"> Path View
+                <li><a href="#"> Path View<br>
                         
                         <span class="switch-ctrl">OFF</span>
                         <label class="switch">
@@ -87,11 +88,7 @@
                         <span class="switch-ctrl">ON</span>
                     
                     </a></li>
-                <li><a href="#">
-                        <button type="button" class="btn btn-primary navigation-button active" id="maplive">Live</button>
-                        <button type="button" class="btn btn-success navigation-button" id="mapgraphical">Graphical</button>
-                    </a></li>
-
+                    <br>
                     <li><a href="">
                        <button type="button" class="btn btn-primary mapping-button" id="startmap" >Start Mapping</button>
                         
@@ -102,6 +99,8 @@
     <!-- end box1 -->
 </nav>
 <div id="nav" class="canvasScreen"></div>
+<!-- <center><canvas id="canvas"></canvas> -->
+<br>
 
 <!-- <div class="btn" id="home">home</div>
 <div class="btn" id="navigate">navigate</div>

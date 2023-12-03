@@ -1,0 +1,1 @@
+install @u4/opencv4nodejs

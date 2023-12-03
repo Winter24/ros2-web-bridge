@@ -32,16 +32,16 @@ listener.subscribe((data) => {
 
 // take image here to push socket
 // npm install @u4/opencv4nodejs
-const Listener = new ROSLIB.Topic({
+const imageListener = new ROSLIB.Topic({
     ros: new ROSLIB.Ros({
       url: 'ws://localhost:9090' // Replace with your ROS web socket URL
     }),
-    name: '/map',
-    messageType: 'nav_msgs/msg/OccupancyGrid'
+    name: '/camera/image_raw',
+    messageType: 'sensor_msgs/msg/Image'
   });
-  Listener.subscribe((data) => {
+  imageListener.subscribe((message) => {
 
-    io.emit('message', data);}
+    io.emit('image', message);}
     
   );
 
@@ -66,5 +66,4 @@ app.use(helmet())
 server.listen(3000, () => {
   console.log('Server listening on port 3000');
 });
-
 

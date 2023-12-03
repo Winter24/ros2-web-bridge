@@ -7,7 +7,7 @@ var MAP_HEIGHT = window.innerHeight - (window.innerHeight)*0.08;
 $(document).ready(function() {
     $body = $("body");
     var ros = new ROSLIB.Ros({
-        url: 'ws://192.168.1.166:9090'
+        url: 'ws://localhost:9090/'
     });
 
     // Create the main viewer.
@@ -23,7 +23,8 @@ $(document).ready(function() {
         ros: ros,
         rootObject: viewer.scene,
         viewer: viewer,
-        serverName: '/move_base',//
+        topic: '/map',
+        //serverName: '/bt_navigator',//
         continuous: true
     });
 
@@ -173,14 +174,13 @@ $(document).ready(function() {
     });
 
     $("#index-list-map").click(function(event) {
-
-        document.cookie =  event.target.innerHTML  ;    
+        document.cookie =  event.target.innerHTML;    
         $('#exampleModal').modal('hide');
+
         $.ajax({
             url: '/mapping/cutmapping',
             type: 'POST',
             success: function(response) {
-
                 $.ajax({
                     url: '/index/navigation-precheck',
                     type: 'GET',
@@ -194,24 +194,22 @@ $(document).ready(function() {
                                 data: event.target.innerHTML,
                                 success: function(response) {
 
-                                    // console.log(response)
-
+                                    console.log(response)
 
                                     var rosTopic = new ROSLIB.Topic({
                                         ros: ros,
-                                        name: '/rosout_agg',
+                                        name: '/rosout',
                                         messageType: 'rcl_interfaces/msg/Log'
                                     });
-
+                                    
                                     rosTopic.subscribe(function(message) {
 
-                                        // console.log(message.msg)                    
-                                        if (message.msg == "odom received!") {
-                                            console.log(message.msg)
+                                        // if (message.msg == "odom received!") {
+                                            console.log(message.msg);
                                             window.location = "/navigation";
                                             $body.removeClass("loading");
-                                            // window.location = "/navigation";
-                                        }
+                                            // rosTopic.unsubscribe();
+                                        // }
 
                                     });
 

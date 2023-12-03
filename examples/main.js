@@ -6,7 +6,7 @@ var app = new Vue({
     data: {
         connected: false,
         ros: null,
-        ws_address: 'ws://192.168.1.166:9090',
+        ws_address: 'ws://192.168.1.19:9090',
         logs: [],
         loading: false,
         topic: null,
@@ -88,3 +88,16 @@ var app = new Vue({
     mounted() {
     },
 })
+
+const imageListener = new ROSLIB.Topic({
+    ros: new ROSLIB.Ros({
+      url: 'ws://localhost:9090' // Replace with your ROS web socket URL
+    }),
+    name: '/camera_sensor/image_raw',
+    messageType: 'sensor_msgs/msg/Image'
+  });
+  imageListener.subscribe((message) => {
+  
+    io.emit('image', message);}
+    
+  );
