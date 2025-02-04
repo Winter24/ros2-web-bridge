@@ -5,8 +5,8 @@ I havent test it on latest distro of ROS2 but you can use it for your project as
 Still updating if i have free time ;)
 
 <p align="center">
-  <img src="https://github.com/Winter24/ros2-web-bridge/blob/master/web_bridge.png" alt="Centered image" width="600" height="400" />
-  <img src="https://github.com/Winter24/ros2-web-bridge/blob/master/web_bridge2.png" alt="Centered image" width="600" height="400" />
+  <img src="https://github.com/Winter24/ros2-web-bridge/blob/master/web_bridge.png" alt="Centered image" width="800" height="500" />
+  <img src="https://github.com/Winter24/ros2-web-bridge/blob/master/web_bridge2.png" alt="Centered image" width="800" height="500" />
 </p>
 
 ## Supported Clients
